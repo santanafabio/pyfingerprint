@@ -20,9 +20,10 @@ Depends: ${python:Depends},
          python-serial,
          python-pil
 Architecture: all
-Description: Python 2 written library for using the ZFM-20 fingerprint sensor
- This library is required for using the ZhianTec ZFM-20 fingerprint sensor
- (known as "Arduino fingerprint sensor") in Python 2.
+Description: Python 2 written library for using ZhianTec fingerprint sensors
+ Library for using ZhianTec ZFM-20, ZFM-60, ZFM-70 and ZFM-100 fingerprint
+ sensors (known as "Arduino fingerprint sensor") in Python 2. Some other models
+ like R302, R303, R305, R306, R307, R551 and FPM10A also work.
 
 Package: python3-fingerprint
 Depends: ${python3:Depends},
@@ -30,6 +31,7 @@ Depends: ${python3:Depends},
          python3-serial,
          python3-pil
 Architecture: all
-Description: Python 3 written library for using the ZFM-20 fingerprint sensor
- This library is required for using the ZhianTec ZFM-20 fingerprint sensor
- (known as "Arduino fingerprint sensor") in Python 3.
+Description: Python 3 written library for using ZhianTec fingerprint sensors
+ Library for using ZhianTec ZFM-20, ZFM-60, ZFM-70 and ZFM-100 fingerprint
+ sensors (known as "Arduino fingerprint sensor") in Python 3. Some other models
+ like R302, R303, R305, R306, R307, R551 and FPM10A also work.
