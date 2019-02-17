@@ -1,14 +1,15 @@
 Source: python-fingerprint
 Maintainer: Philipp Meisberger <team@pm-codeworks.de>
 Section: python
-Priority: optional
+Priority: extra
 Standards-Version: 3.9.8
 Build-Depends: debhelper (>= 9),
                dh-python,
                python (>= 2.7),
                python3 (>= 3.2),
                python-setuptools,
-               python3-setuptools
+               python3-setuptools,
+               python-sphinx
 X-Python-Version: all
 X-Python3-Version: >= 3.2
 Vcs-Git: https://github.com/bastianraschke/pyfingerprint.git
@@ -35,3 +36,12 @@ Description: Python 3 written library for using ZhianTec fingerprint sensors
  Library for using ZhianTec ZFM-20, ZFM-60, ZFM-70 and ZFM-100 fingerprint
  sensors (known as "Arduino fingerprint sensor") in Python 3. Some other models
  like R302, R303, R305, R306, R307, R551 and FPM10A also work.
+
+Package: python-fingerprint-doc
+Section: doc
+Architecture: all
+Depends: ${misc:Depends}, libjs-jquery, libjs-underscore
+Recommends: python-fingerprint | python3-fingerprint
+Description: API Documentation for PyFingerprint
+ Python 2 and 3 written library for using ZhianTec fingerprint sensors. This
+ package contains the API documentation.
