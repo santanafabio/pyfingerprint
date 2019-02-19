@@ -40,7 +40,7 @@ Description: Python 3 written library for using ZhianTec fingerprint sensors
 Package: python-fingerprint-doc
 Section: doc
 Architecture: all
-Depends: ${misc:Depends}, libjs-jquery, libjs-underscore
+Depends: ${sphinxdoc:Depends}, ${misc:Depends}
 Recommends: python-fingerprint | python3-fingerprint
 Description: API Documentation for PyFingerprint
  Python 2 and 3 written library for using ZhianTec fingerprint sensors. This
