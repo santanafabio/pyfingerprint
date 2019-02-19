@@ -9,7 +9,7 @@ Build-Depends: debhelper (>= 9),
                python3 (>= 3.2),
                python-setuptools,
                python3-setuptools,
-               python-sphinx
+               python-sphinx | python3-sphinx
 X-Python-Version: all
 X-Python3-Version: >= 3.2
 Vcs-Git: https://github.com/bastianraschke/pyfingerprint.git
