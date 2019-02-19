@@ -10,7 +10,7 @@ import pyfingerprint
 project = u'PyFingerprint'
 master_doc = 'PyFingerprint'
 author = 'Bastian Raschke <bastian.raschke@posteo.de>'
-copyright = '2014-{}, {}'.format(datetime.date.today().year, author.format)
+copyright = '2014-{}, {}'.format(datetime.date.today().year, author)
 version = pyfingerprint.__version__
 release = version
 exclude_patterns = [
