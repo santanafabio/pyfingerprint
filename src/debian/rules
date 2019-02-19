@@ -13,7 +13,10 @@ override_dh_auto_build:
 		$$python setup.py build; \
 	done;
 
+	## Build API documentation
 	sphinx-build -b html ../doc ./build/html
+
+	## Fix Lintian warnings
 	rm ./build/html/_static/jquery.js
 	ln -s /usr/share/javascript/jquery/jquery.js ./build/html/_static/jquery.js
 	rm ./build/html/_static/underscore.js
