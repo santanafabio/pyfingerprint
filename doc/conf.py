@@ -21,3 +21,4 @@ exclude_patterns = [
 extensions = [
     'sphinx.ext.autodoc',
 ]
+autoclass_content = "both"
