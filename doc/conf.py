@@ -1,14 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import datetime
 import sys
-sys.path.append('../src/files/')
+sys.path.insert(0, '../src/files/')
+
+import pyfingerprint
 
 project = u'PyFingerprint'
 master_doc = 'PyFingerprint'
-copyright = '2019, Bastian Raschke <bastian.raschke@posteo.de>'
 author = 'Bastian Raschke <bastian.raschke@posteo.de>'
-version = __import__('pyfingerprint').__version__
+copyright = '2014-{}, {}'.format(datetime.date.today().year, author.format)
+version = pyfingerprint.__version__
 release = version
 exclude_patterns = [
     '_build',
