@@ -717,12 +717,7 @@ class PyFingerprint(object):
         else:
             raise Exception('Unknown error '+ hex(receivedPacketPayload[0]))
 
-        ## Initialize image library
-        resultImage = Image.new('L', (256, 288), 'white')
-        pixels = resultImage.load()
-
-        ## Y coordinate of current pixel
-        line = 0
+        imageData = []
 
         ## Get follow-up data packets until the last data packet is received
         while ( receivedPacketType != FINGERPRINT_ENDDATAPACKET ):
@@ -735,22 +730,29 @@ class PyFingerprint(object):
             if ( receivedPacketType != FINGERPRINT_DATAPACKET and receivedPacketType != FINGERPRINT_ENDDATAPACKET ):
                 raise Exception('The received packet is no data packet!')
 
-            ## X coordinate of current pixel
-            x = 0
+            imageData.append(receivedPacketPayload)
 
-            for i in range(0, len(receivedPacketPayload)):
+        ## Initialize image
+        resultImage = Image.new('L', (256, 288), 'white')
+        pixels = resultImage.load()
+        row = 0
+        column = 0
 
+        for y in range(resultImage.height):
+            for x in range(resultImage.width):
+
+                ## One byte contains two pixels
                 ## Thanks to Danylo Esterman <soundcracker@gmail.com> for the "multiple with 17" improvement:
+                if (x % 2 == 0):
+                    pixels[x, y] = (imageData[row][column]  >> 4) * 17
+                else:
+                    pixels[x, y] = (imageData[row][column] & 0x0F) * 17
+                    column += 1
 
-                ## Draw left 4 Bits one byte of package
-                pixels[x, line] = (receivedPacketPayload[i] >> 4) * 17
-                x = x + 1
-
-                ## Draw right 4 Bits one byte of package
-                pixels[x, line] = (receivedPacketPayload[i] & 0b00001111) * 17
-                x = x + 1
-
-            line = line + 1
+                    ## Reset
+                    if (column == len(imageData[row])):
+                        row += 1
+                        column = 0
 
         resultImage.save(imageDestination)
 
