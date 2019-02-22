@@ -1216,6 +1216,22 @@ class PyFingerprint(object):
         else:
             return 32
 
+    def setMaxPacketSize(self, packetSize):
+        """
+        Sets the maximum packet size of sensor.
+
+        packetSize (int): 32, 64, 128 and 256 are supported.
+        """
+
+        try:
+            packetSizes = {32: 0, 64: 1, 128: 2, 256: 3}
+            packetMaxSizeType = packetSizes[packetSize]
+
+        except KeyError:
+            raise ValueError("Invalid packet size")
+
+        self.setSystemParameter(6, packetMaxSizeType)
+
     def getStorageCapacity(self):
         """
         Get the sensor storage capacity.
@@ -1225,6 +1241,45 @@ class PyFingerprint(object):
         """
 
         return self.getSystemParameters()[2]
+
+    def getSecurityLevel(self):
+        """
+        Gets the security level of the sensor.
+
+        @return int
+        """
+
+        return self.getSystemParameters()[3]
+
+    def setSecurityLevel(self, securityLevel):
+        """
+        Sets the security level of the sensor.
+
+        securityLevel (int): Value between 1 and 5 where 1 is lowest and 5 highest.
+        """
+
+        self.setSystemParameter(5, securityLevel)
+
+    def getBaudRate(self):
+        """
+        Gets the baudrate.
+
+        @return int
+        """
+
+        return self.getSystemParameters()[6] * 9600
+
+    def setBaudRate(self, baudRate):
+        """
+        Sets the baudrate.
+
+        baudRate (int): The baudrate
+        """
+
+        if (baudRate % 9600 != 0):
+            raise ValueError("Invalid baudrate")
+
+        self.setSystemParameter(4, baudRate // 9600)
 
     def generateRandomNumber(self):
         """
