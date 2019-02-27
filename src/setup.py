@@ -3,10 +3,15 @@
 
 from setuptools import setup
 
+import sys
+sys.path.insert(0, './files/')
+
+import pyfingerprint
+
 setup(
     name            = 'pyfingerprint',
-    version         = '1.5', ## Never forget to change module version as well!
-    description     = 'Python written library for using the ZFM-20 fingerprint sensor.',
+    version         = pyfingerprint.__version__,
+    description     = 'Python written library for using ZhianTec fingerprint sensors.',
     author          = 'Bastian Raschke',
     author_email    = 'bastian.raschke@posteo.de',
     url             = 'https://sicherheitskritisch.de',
