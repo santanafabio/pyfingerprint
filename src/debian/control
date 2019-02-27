@@ -44,6 +44,6 @@ Section: doc
 Architecture: all
 Depends: ${sphinxdoc:Depends}, ${misc:Depends}
 Recommends: python-fingerprint | python3-fingerprint
-Description: API Documentation for PyFingerprint
+Description: API documentation for PyFingerprint
  Python 2 and 3 written library for using ZhianTec fingerprint sensors. This
  package contains the API documentation.
