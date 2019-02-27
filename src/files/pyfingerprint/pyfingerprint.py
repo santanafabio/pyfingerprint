@@ -744,8 +744,10 @@ class PyFingerprint(object):
                 ## One byte contains two pixels
                 ## Thanks to Danylo Esterman <soundcracker@gmail.com> for the "multiple with 17" improvement:
                 if (x % 2 == 0):
+                    ## Draw left 4 Bits one byte of package
                     pixels[x, y] = (imageData[row][column]  >> 4) * 17
                 else:
+                    ## Draw right 4 Bits one byte of package
                     pixels[x, y] = (imageData[row][column] & 0x0F) * 17
                     column += 1
 
