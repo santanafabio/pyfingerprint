@@ -1199,22 +1199,20 @@ class PyFingerprint(object):
         """
         Get the maximum allowed size of packet by sensor.
 
-        @author: David Gilson <davgilson@live.fr>
-
         @return int
-        Return the max size. Default 32 bytes.
+        Return the max size.
         """
 
         packetMaxSizeType = self.getSystemParameters()[5]
 
-        if (packetMaxSizeType == 1):
-            return 64
-        elif (packetMaxSizeType == 2):
-            return 128
-        elif (packetMaxSizeType == 3):
-            return 256
-        else:
-            return 32
+        try:
+            packetSizes = [32, 64, 128, 256]
+            packetSize = packetSizes[packetMaxSizeType]
+
+        except KeyError:
+            raise ValueError("Invalid packet size")
+
+        return packetSize
 
     def setMaxPacketSize(self, packetSize):
         """
