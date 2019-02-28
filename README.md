@@ -9,7 +9,7 @@ The PyFingerprint library allows to use ZhianTec ZFM-20, ZFM-60, ZFM-70 and ZFM-
 
 Install the packages for building:
 
-    ~$ sudo apt-get install git devscripts
+    ~$ sudo apt-get install git devscripts equivs
 
 Clone this repository:
 
