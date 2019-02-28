@@ -7,17 +7,18 @@ The PyFingerprint library allows to use ZhianTec ZFM-20, ZFM-60, ZFM-70 and ZFM-
 
 ## Package building on Debian
 
+Install the packages for building:
+
+    ~$ sudo apt-get install git devscripts
+
 Clone this repository:
 
     ~$ git clone https://github.com/bastianraschke/pyfingerprint.git
 
-Install the packages for building:
+Build the package:
 
     ~$ cd ./pyfingerprint/src/
     ~$ sudo mk-build-deps -i debian/control
-
-Build the package:
-
     ~$ dpkg-buildpackage -uc -us
 
 ## Installation
