@@ -60,6 +60,13 @@ FINGERPRINT_UPLOADCHARACTERISTICS = 0x09
 ## Note: The documentation mean upload to host computer.
 FINGERPRINT_DOWNLOADCHARACTERISTICS = 0x08
 
+## Parameters of setSystemParameter()
+##
+
+FINGERPRINT_SETSYSTEMPARAMETER_BAUDRATE = 4
+FINGERPRINT_SETSYSTEMPARAMETER_SECURITY_LEVEL = 5
+FINGERPRINT_SETSYSTEMPARAMETER_PACKAGE_SIZE = 6
+
 ## Packet reply confirmations
 ##
 
@@ -460,19 +467,19 @@ class PyFingerprint(object):
         """
 
         ## Validate the baudrate parameter
-        if ( parameterNumber == 4 ):
+        if ( parameterNumber == FINGERPRINT_SETSYSTEMPARAMETER_BAUDRATE ):
 
             if ( parameterValue < 1 or parameterValue > 12 ):
                 raise ValueError('The given baudrate parameter is invalid!')
 
         ## Validate the security level parameter
-        elif ( parameterNumber == 5 ):
+        elif ( parameterNumber == FINGERPRINT_SETSYSTEMPARAMETER_SECURITY_LEVEL ):
 
             if ( parameterValue < 1 or parameterValue > 5 ):
                 raise ValueError('The given security level parameter is invalid!')
 
         ## Validate the package length parameter
-        elif ( parameterNumber == 6 ):
+        elif ( parameterNumber == FINGERPRINT_SETSYSTEMPARAMETER_PACKAGE_SIZE ):
 
             if ( parameterValue < 0 or parameterValue > 3 ):
                 raise ValueError('The given package length parameter is invalid!')
@@ -519,7 +526,7 @@ class PyFingerprint(object):
         if (baudRate % 9600 != 0):
             raise ValueError("Invalid baudrate")
 
-        self.setSystemParameter(4, baudRate // 9600)
+        self.setSystemParameter(FINGERPRINT_SETSYSTEMPARAMETER_BAUDRATE, baudRate // 9600)
 
     def setSecurityLevel(self, securityLevel):
         """
@@ -528,7 +535,7 @@ class PyFingerprint(object):
         securityLevel (int): Value between 1 and 5 where 1 is lowest and 5 highest.
         """
 
-        self.setSystemParameter(5, securityLevel)
+        self.setSystemParameter(FINGERPRINT_SETSYSTEMPARAMETER_SECURITY_LEVEL, securityLevel)
 
     def setMaxPacketSize(self, packetSize):
         """
@@ -544,7 +551,7 @@ class PyFingerprint(object):
         except KeyError:
             raise ValueError("Invalid packet size")
 
-        self.setSystemParameter(6, packetMaxSizeType)
+        self.setSystemParameter(FINGERPRINT_SETSYSTEMPARAMETER_PACKAGE_SIZE, packetMaxSizeType)
 
     def getSystemParameters(self):
         """
