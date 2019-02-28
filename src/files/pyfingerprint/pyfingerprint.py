@@ -509,6 +509,43 @@ class PyFingerprint(object):
         else:
             raise Exception('Unknown error '+ hex(receivedPacketPayload[0]))
 
+    def setBaudRate(self, baudRate):
+        """
+        Sets the baudrate.
+
+        baudRate (int): The baudrate
+        """
+
+        if (baudRate % 9600 != 0):
+            raise ValueError("Invalid baudrate")
+
+        self.setSystemParameter(4, baudRate // 9600)
+
+    def setSecurityLevel(self, securityLevel):
+        """
+        Sets the security level of the sensor.
+
+        securityLevel (int): Value between 1 and 5 where 1 is lowest and 5 highest.
+        """
+
+        self.setSystemParameter(5, securityLevel)
+
+    def setMaxPacketSize(self, packetSize):
+        """
+        Sets the maximum packet size of sensor.
+
+        packetSize (int): 32, 64, 128 and 256 are supported.
+        """
+
+        try:
+            packetSizes = {32: 0, 64: 1, 128: 2, 256: 3}
+            packetMaxSizeType = packetSizes[packetSize]
+
+        except KeyError:
+            raise ValueError("Invalid packet size")
+
+        self.setSystemParameter(6, packetMaxSizeType)
+
     def getSystemParameters(self):
         """
         Get all available system information of the sensor.
@@ -556,6 +593,55 @@ class PyFingerprint(object):
 
         else:
             raise Exception('Unknown error '+ hex(receivedPacketPayload[0]))
+
+    def getStorageCapacity(self):
+        """
+        Get the sensor storage capacity.
+
+        @return int
+        The storage capacity.
+        """
+
+        return self.getSystemParameters()[2]
+
+    def getSecurityLevel(self):
+        """
+        Gets the security level of the sensor.
+
+        @return int
+        The security level
+        """
+
+        return self.getSystemParameters()[3]
+
+    def getMaxPacketSize(self):
+        """
+        Get the maximum allowed size of packet by sensor.
+
+        @return int
+        Return the max size.
+        """
+
+        packetMaxSizeType = self.getSystemParameters()[5]
+
+        try:
+            packetSizes = [32, 64, 128, 256]
+            packetSize = packetSizes[packetMaxSizeType]
+
+        except KeyError:
+            raise ValueError("Invalid packet size")
+
+        return packetSize
+
+    def getBaudRate(self):
+        """
+        Gets the baudrate.
+
+        @return int
+        The baudrate
+        """
+
+        return self.getSystemParameters()[6] * 9600
 
     def getTemplateIndex(self, page):
         """
@@ -1194,90 +1280,6 @@ class PyFingerprint(object):
         ## Verify uploaded characteristics
         characterics = self.downloadCharacteristics(charBufferNumber)
         return (characterics == characteristicsData)
-
-    def getMaxPacketSize(self):
-        """
-        Get the maximum allowed size of packet by sensor.
-
-        @return int
-        Return the max size.
-        """
-
-        packetMaxSizeType = self.getSystemParameters()[5]
-
-        try:
-            packetSizes = [32, 64, 128, 256]
-            packetSize = packetSizes[packetMaxSizeType]
-
-        except KeyError:
-            raise ValueError("Invalid packet size")
-
-        return packetSize
-
-    def setMaxPacketSize(self, packetSize):
-        """
-        Sets the maximum packet size of sensor.
-
-        packetSize (int): 32, 64, 128 and 256 are supported.
-        """
-
-        try:
-            packetSizes = {32: 0, 64: 1, 128: 2, 256: 3}
-            packetMaxSizeType = packetSizes[packetSize]
-
-        except KeyError:
-            raise ValueError("Invalid packet size")
-
-        self.setSystemParameter(6, packetMaxSizeType)
-
-    def getStorageCapacity(self):
-        """
-        Get the sensor storage capacity.
-
-        @return int
-        The storage capacity.
-        """
-
-        return self.getSystemParameters()[2]
-
-    def getSecurityLevel(self):
-        """
-        Gets the security level of the sensor.
-
-        @return int
-        """
-
-        return self.getSystemParameters()[3]
-
-    def setSecurityLevel(self, securityLevel):
-        """
-        Sets the security level of the sensor.
-
-        securityLevel (int): Value between 1 and 5 where 1 is lowest and 5 highest.
-        """
-
-        self.setSystemParameter(5, securityLevel)
-
-    def getBaudRate(self):
-        """
-        Gets the baudrate.
-
-        @return int
-        """
-
-        return self.getSystemParameters()[6] * 9600
-
-    def setBaudRate(self, baudRate):
-        """
-        Sets the baudrate.
-
-        baudRate (int): The baudrate
-        """
-
-        if (baudRate % 9600 != 0):
-            raise ValueError("Invalid baudrate")
-
-        self.setSystemParameter(4, baudRate // 9600)
 
     def generateRandomNumber(self):
         """
