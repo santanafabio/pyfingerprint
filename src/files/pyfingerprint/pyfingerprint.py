@@ -113,6 +113,11 @@ FINGERPRINT_PACKETRESPONSEFAIL = 0x0E
 FINGERPRINT_ERROR_TIMEOUT = 0xFF
 FINGERPRINT_ERROR_BADPACKET = 0xFE
 
+## Char buffers
+##
+
+FINGERPRINT_CHARBUFFER1 = 0x01
+FINGERPRINT_CHARBUFFER2 = 0x02
 
 class PyFingerprint(object):
     """
@@ -849,7 +854,7 @@ class PyFingerprint(object):
 
         resultImage.save(imageDestination)
 
-    def convertImage(self, charBufferNumber = 0x01):
+    def convertImage(self, charBufferNumber = FINGERPRINT_CHARBUFFER1):
         """
         Convert the image in ImageBuffer to finger characteristics and store in CharBuffer1 or CharBuffer2.
 
@@ -857,7 +862,7 @@ class PyFingerprint(object):
         @return boolean
         """
 
-        if ( charBufferNumber != 0x01 and charBufferNumber != 0x02 ):
+        if ( charBufferNumber != FINGERPRINT_CHARBUFFER1 and charBufferNumber != FINGERPRINT_CHARBUFFER2 ):
             raise ValueError('The given charbuffer number is invalid!')
 
         packetPayload = (
@@ -928,7 +933,7 @@ class PyFingerprint(object):
         else:
             raise Exception('Unknown error '+ hex(receivedPacketPayload[0]))
 
-    def storeTemplate(self, positionNumber = -1, charBufferNumber = 0x01):
+    def storeTemplate(self, positionNumber = -1, charBufferNumber = FINGERPRINT_CHARBUFFER1):
         """
         Save a template from the specified CharBuffer to the given position number.
 
@@ -955,7 +960,7 @@ class PyFingerprint(object):
         if ( positionNumber < 0x0000 or positionNumber >= self.getStorageCapacity() ):
             raise ValueError('The given position number is invalid!')
 
-        if ( charBufferNumber != 0x01 and charBufferNumber != 0x02 ):
+        if ( charBufferNumber != FINGERPRINT_CHARBUFFER1 and charBufferNumber != FINGERPRINT_CHARBUFFER2 ):
             raise ValueError('The given charbuffer number is invalid!')
 
         packetPayload = (
@@ -1002,7 +1007,7 @@ class PyFingerprint(object):
         """
 
         ## CharBuffer1 and CharBuffer2 are the same in this case
-        charBufferNumber = 0x01
+        charBufferNumber = FINGERPRINT_CHARBUFFER1
 
         ## Begin search at index 0
         positionStart = 0x0000
@@ -1047,7 +1052,7 @@ class PyFingerprint(object):
         else:
             raise Exception('Unknown error '+ hex(receivedPacketPayload[0]))
 
-    def loadTemplate(self, positionNumber, charBufferNumber = 0x01):
+    def loadTemplate(self, positionNumber, charBufferNumber = FINGERPRINT_CHARBUFFER1):
         """
         Load an existing template specified by position number to specified CharBuffer.
 
@@ -1059,7 +1064,7 @@ class PyFingerprint(object):
         if ( positionNumber < 0x0000 or positionNumber >= self.getStorageCapacity() ):
             raise ValueError('The given position number is invalid!')
 
-        if ( charBufferNumber != 0x01 and charBufferNumber != 0x02 ):
+        if ( charBufferNumber != FINGERPRINT_CHARBUFFER1 and charBufferNumber != FINGERPRINT_CHARBUFFER2 ):
             raise ValueError('The given charbuffer number is invalid!')
 
         packetPayload = (
@@ -1215,7 +1220,7 @@ class PyFingerprint(object):
         else:
             raise Exception('Unknown error '+ hex(receivedPacketPayload[0]))
 
-    def uploadCharacteristics(self, charBufferNumber = 0x01, characteristicsData = [0]):
+    def uploadCharacteristics(self, charBufferNumber = FINGERPRINT_CHARBUFFER1, characteristicsData = [0]):
         """
         Upload finger characteristics to CharBuffer1 or CharBuffer2.
 
@@ -1228,7 +1233,7 @@ class PyFingerprint(object):
         Return true if everything is right.
         """
 
-        if ( charBufferNumber != 0x01 and charBufferNumber != 0x02 ):
+        if ( charBufferNumber != FINGERPRINT_CHARBUFFER1 and charBufferNumber != FINGERPRINT_CHARBUFFER2 ):
             raise ValueError('The given charbuffer number is invalid!')
 
         if ( characteristicsData == [0] ):
@@ -1326,7 +1331,7 @@ class PyFingerprint(object):
         number = number | self.__leftShift(receivedPacketPayload[4], 0)
         return number
 
-    def downloadCharacteristics(self, charBufferNumber = 0x01):
+    def downloadCharacteristics(self, charBufferNumber = FINGERPRINT_CHARBUFFER1):
         """
         Download the finger characteristics of CharBuffer1 or CharBuffer2.
 
@@ -1336,7 +1341,7 @@ class PyFingerprint(object):
         Return a list that contains 512 integer(1 byte) elements of the characteristic.
         """
 
-        if ( charBufferNumber != 0x01 and charBufferNumber != 0x02 ):
+        if ( charBufferNumber != FINGERPRINT_CHARBUFFER1 and charBufferNumber != FINGERPRINT_CHARBUFFER2 ):
             raise ValueError('The given charbuffer number is invalid!')
 
         packetPayload = (
