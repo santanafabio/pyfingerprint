@@ -1,17 +1,22 @@
 #!/usr/bin/make -f
 
 %:
-	dh $@ --with python2,python3
+	dh $@ --with python2,python3,sphinxdoc
 
 override_dh_auto_clean:
 	dh_auto_clean
 	rm -rf ./build/ ./files/*.egg-info/
 
+override_dh_auto_build: export http_proxy=127.0.0.1:9
+override_dh_auto_build: export https_proxy=127.0.0.1:9
 override_dh_auto_build:
 	dh_auto_build
 	set -ex; for python in $(shell py3versions -r); do \
 		$$python setup.py build; \
 	done;
+
+	## Build API documentation
+	sphinx-build -b html ../doc ./build/html
 
 override_dh_auto_install:
 	dh_auto_install
