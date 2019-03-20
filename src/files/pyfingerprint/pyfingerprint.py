@@ -60,6 +60,13 @@ FINGERPRINT_UPLOADCHARACTERISTICS = 0x09
 ## Note: The documentation mean upload to host computer.
 FINGERPRINT_DOWNLOADCHARACTERISTICS = 0x08
 
+## Parameters of setSystemParameter()
+##
+
+FINGERPRINT_SETSYSTEMPARAMETER_BAUDRATE = 4
+FINGERPRINT_SETSYSTEMPARAMETER_SECURITY_LEVEL = 5
+FINGERPRINT_SETSYSTEMPARAMETER_PACKAGE_SIZE = 6
+
 ## Packet reply confirmations
 ##
 
@@ -106,6 +113,11 @@ FINGERPRINT_PACKETRESPONSEFAIL = 0x0E
 FINGERPRINT_ERROR_TIMEOUT = 0xFF
 FINGERPRINT_ERROR_BADPACKET = 0xFE
 
+## Char buffers
+##
+
+FINGERPRINT_CHARBUFFER1 = 0x01
+FINGERPRINT_CHARBUFFER2 = 0x02
 
 class PyFingerprint(object):
     """
@@ -460,19 +472,19 @@ class PyFingerprint(object):
         """
 
         ## Validate the baudrate parameter
-        if ( parameterNumber == 4 ):
+        if ( parameterNumber == FINGERPRINT_SETSYSTEMPARAMETER_BAUDRATE ):
 
             if ( parameterValue < 1 or parameterValue > 12 ):
                 raise ValueError('The given baudrate parameter is invalid!')
 
         ## Validate the security level parameter
-        elif ( parameterNumber == 5 ):
+        elif ( parameterNumber == FINGERPRINT_SETSYSTEMPARAMETER_SECURITY_LEVEL ):
 
             if ( parameterValue < 1 or parameterValue > 5 ):
                 raise ValueError('The given security level parameter is invalid!')
 
         ## Validate the package length parameter
-        elif ( parameterNumber == 6 ):
+        elif ( parameterNumber == FINGERPRINT_SETSYSTEMPARAMETER_PACKAGE_SIZE ):
 
             if ( parameterValue < 0 or parameterValue > 3 ):
                 raise ValueError('The given package length parameter is invalid!')
@@ -508,6 +520,43 @@ class PyFingerprint(object):
 
         else:
             raise Exception('Unknown error '+ hex(receivedPacketPayload[0]))
+
+    def setBaudRate(self, baudRate):
+        """
+        Sets the baudrate.
+
+        baudRate (int): The baudrate
+        """
+
+        if (baudRate % 9600 != 0):
+            raise ValueError("Invalid baudrate")
+
+        self.setSystemParameter(FINGERPRINT_SETSYSTEMPARAMETER_BAUDRATE, baudRate // 9600)
+
+    def setSecurityLevel(self, securityLevel):
+        """
+        Sets the security level of the sensor.
+
+        securityLevel (int): Value between 1 and 5 where 1 is lowest and 5 highest.
+        """
+
+        self.setSystemParameter(FINGERPRINT_SETSYSTEMPARAMETER_SECURITY_LEVEL, securityLevel)
+
+    def setMaxPacketSize(self, packetSize):
+        """
+        Sets the maximum packet size of sensor.
+
+        packetSize (int): 32, 64, 128 and 256 are supported.
+        """
+
+        try:
+            packetSizes = {32: 0, 64: 1, 128: 2, 256: 3}
+            packetMaxSizeType = packetSizes[packetSize]
+
+        except KeyError:
+            raise ValueError("Invalid packet size")
+
+        self.setSystemParameter(FINGERPRINT_SETSYSTEMPARAMETER_PACKAGE_SIZE, packetMaxSizeType)
 
     def getSystemParameters(self):
         """
@@ -556,6 +605,55 @@ class PyFingerprint(object):
 
         else:
             raise Exception('Unknown error '+ hex(receivedPacketPayload[0]))
+
+    def getStorageCapacity(self):
+        """
+        Get the sensor storage capacity.
+
+        @return int
+        The storage capacity.
+        """
+
+        return self.getSystemParameters()[2]
+
+    def getSecurityLevel(self):
+        """
+        Gets the security level of the sensor.
+
+        @return int
+        The security level
+        """
+
+        return self.getSystemParameters()[3]
+
+    def getMaxPacketSize(self):
+        """
+        Get the maximum allowed size of packet by sensor.
+
+        @return int
+        Return the max size.
+        """
+
+        packetMaxSizeType = self.getSystemParameters()[5]
+
+        try:
+            packetSizes = [32, 64, 128, 256]
+            packetSize = packetSizes[packetMaxSizeType]
+
+        except KeyError:
+            raise ValueError("Invalid packet size")
+
+        return packetSize
+
+    def getBaudRate(self):
+        """
+        Gets the baudrate.
+
+        @return int
+        The baudrate
+        """
+
+        return self.getSystemParameters()[6] * 9600
 
     def getTemplateIndex(self, page):
         """
@@ -758,7 +856,7 @@ class PyFingerprint(object):
 
         resultImage.save(imageDestination)
 
-    def convertImage(self, charBufferNumber = 0x01):
+    def convertImage(self, charBufferNumber = FINGERPRINT_CHARBUFFER1):
         """
         Convert the image in ImageBuffer to finger characteristics and store in CharBuffer1 or CharBuffer2.
 
@@ -766,7 +864,7 @@ class PyFingerprint(object):
         @return boolean
         """
 
-        if ( charBufferNumber != 0x01 and charBufferNumber != 0x02 ):
+        if ( charBufferNumber != FINGERPRINT_CHARBUFFER1 and charBufferNumber != FINGERPRINT_CHARBUFFER2 ):
             raise ValueError('The given charbuffer number is invalid!')
 
         packetPayload = (
@@ -837,7 +935,7 @@ class PyFingerprint(object):
         else:
             raise Exception('Unknown error '+ hex(receivedPacketPayload[0]))
 
-    def storeTemplate(self, positionNumber = -1, charBufferNumber = 0x01):
+    def storeTemplate(self, positionNumber = -1, charBufferNumber = FINGERPRINT_CHARBUFFER1):
         """
         Save a template from the specified CharBuffer to the given position number.
 
@@ -864,7 +962,7 @@ class PyFingerprint(object):
         if ( positionNumber < 0x0000 or positionNumber >= self.getStorageCapacity() ):
             raise ValueError('The given position number is invalid!')
 
-        if ( charBufferNumber != 0x01 and charBufferNumber != 0x02 ):
+        if ( charBufferNumber != FINGERPRINT_CHARBUFFER1 and charBufferNumber != FINGERPRINT_CHARBUFFER2 ):
             raise ValueError('The given charbuffer number is invalid!')
 
         packetPayload = (
@@ -911,7 +1009,7 @@ class PyFingerprint(object):
         """
 
         ## CharBuffer1 and CharBuffer2 are the same in this case
-        charBufferNumber = 0x01
+        charBufferNumber = FINGERPRINT_CHARBUFFER1
 
         ## Begin search at index 0
         positionStart = 0x0000
@@ -956,7 +1054,7 @@ class PyFingerprint(object):
         else:
             raise Exception('Unknown error '+ hex(receivedPacketPayload[0]))
 
-    def loadTemplate(self, positionNumber, charBufferNumber = 0x01):
+    def loadTemplate(self, positionNumber, charBufferNumber = FINGERPRINT_CHARBUFFER1):
         """
         Load an existing template specified by position number to specified CharBuffer.
 
@@ -968,7 +1066,7 @@ class PyFingerprint(object):
         if ( positionNumber < 0x0000 or positionNumber >= self.getStorageCapacity() ):
             raise ValueError('The given position number is invalid!')
 
-        if ( charBufferNumber != 0x01 and charBufferNumber != 0x02 ):
+        if ( charBufferNumber != FINGERPRINT_CHARBUFFER1 and charBufferNumber != FINGERPRINT_CHARBUFFER2 ):
             raise ValueError('The given charbuffer number is invalid!')
 
         packetPayload = (
@@ -1124,7 +1222,7 @@ class PyFingerprint(object):
         else:
             raise Exception('Unknown error '+ hex(receivedPacketPayload[0]))
 
-    def uploadCharacteristics(self, charBufferNumber = 0x01, characteristicsData = [0]):
+    def uploadCharacteristics(self, charBufferNumber = FINGERPRINT_CHARBUFFER1, characteristicsData = [0]):
         """
         Upload finger characteristics to CharBuffer1 or CharBuffer2.
 
@@ -1137,7 +1235,7 @@ class PyFingerprint(object):
         Return true if everything is right.
         """
 
-        if ( charBufferNumber != 0x01 and charBufferNumber != 0x02 ):
+        if ( charBufferNumber != FINGERPRINT_CHARBUFFER1 and charBufferNumber != FINGERPRINT_CHARBUFFER2 ):
             raise ValueError('The given charbuffer number is invalid!')
 
         if ( characteristicsData == [0] ):
@@ -1197,37 +1295,6 @@ class PyFingerprint(object):
         characterics = self.downloadCharacteristics(charBufferNumber)
         return (characterics == characteristicsData)
 
-    def getMaxPacketSize(self):
-        """
-        Get the maximum allowed size of packet by sensor.
-
-        @author: David Gilson <davgilson@live.fr>
-
-        @return int
-        Return the max size. Default 32 bytes.
-        """
-
-        packetMaxSizeType = self.getSystemParameters()[5]
-
-        if (packetMaxSizeType == 1):
-            return 64
-        elif (packetMaxSizeType == 2):
-            return 128
-        elif (packetMaxSizeType == 3):
-            return 256
-        else:
-            return 32
-
-    def getStorageCapacity(self):
-        """
-        Get the sensor storage capacity.
-
-        @return int
-        The storage capacity.
-        """
-
-        return self.getSystemParameters()[2]
-
     def generateRandomNumber(self):
         """
         Generate a random 32-bit decimal number.
@@ -1266,7 +1333,7 @@ class PyFingerprint(object):
         number = number | self.__leftShift(receivedPacketPayload[4], 0)
         return number
 
-    def downloadCharacteristics(self, charBufferNumber = 0x01):
+    def downloadCharacteristics(self, charBufferNumber = FINGERPRINT_CHARBUFFER1):
         """
         Download the finger characteristics of CharBuffer1 or CharBuffer2.
 
@@ -1276,7 +1343,7 @@ class PyFingerprint(object):
         Return a list that contains 512 integer(1 byte) elements of the characteristic.
         """
 
-        if ( charBufferNumber != 0x01 and charBufferNumber != 0x02 ):
+        if ( charBufferNumber != FINGERPRINT_CHARBUFFER1 and charBufferNumber != FINGERPRINT_CHARBUFFER2 ):
             raise ValueError('The given charbuffer number is invalid!')
 
         packetPayload = (
