@@ -833,11 +833,12 @@ class PyFingerprint(object):
         ## Initialize image
         resultImage = Image.new('L', (256, 288), 'white')
         pixels = resultImage.load()
+        (resultImageWidth, resultImageHeight) = resultImage.size
         row = 0
         column = 0
 
-        for y in range(resultImage.height):
-            for x in range(resultImage.width):
+        for y in range(resultImageHeight):
+            for x in range(resultImageWidth):
 
                 ## One byte contains two pixels
                 ## Thanks to Danylo Esterman <soundcracker@gmail.com> for the "multiple with 17" improvement:
