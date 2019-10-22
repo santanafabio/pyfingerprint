@@ -998,9 +998,11 @@ class PyFingerprint(object):
         else:
             raise Exception('Unknown error '+ hex(receivedPacketPayload[0]))
 
-    def searchTemplate(self):
+    def searchTemplate(self, charBufferNumber = FINGERPRINT_CHARBUFFER1):
         """
         Search the finger characteristics in CharBuffer in database.
+
+        @param integer(1 byte) charBufferNumber
 
         Return a tuple that contain the following information:
         0: integer(2 bytes) The position number of found template.
@@ -1008,9 +1010,6 @@ class PyFingerprint(object):
 
         @return tuple
         """
-
-        ## CharBuffer1 and CharBuffer2 are the same in this case
-        charBufferNumber = FINGERPRINT_CHARBUFFER1
 
         ## Begin search at index 0
         positionStart = 0x0000
