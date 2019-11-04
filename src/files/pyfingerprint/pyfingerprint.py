@@ -1013,10 +1013,10 @@ class PyFingerprint(object):
         @return tuple
         """
 
-        if ( count < 0 ):
-            templatesCount = self.getStorageCapacity()
-        else:
+        if ( count > 0 ):
             templatesCount = count
+        else:
+            templatesCount = self.getStorageCapacity()
 
         packetPayload = (
             FINGERPRINT_SEARCHTEMPLATE,
