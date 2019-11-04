@@ -25,5 +25,18 @@ setup(
     license         = 'D-FSL',
     package_dir     = {'': 'files'},
     packages        = ['pyfingerprint'],
-    install_requires= ['pyserial', 'Pillow'],
+    install_requires= [
+        'pyserial',
+        'Pillow'
+    ],
+    classifiers     = [
+        'Development Status :: 5 - Production/Stable'
+        'Intended Audience :: Developers',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 3',
+        'Operating System :: OS Independent',
+        'Topic :: Terminals :: Serial',
+        'Topic :: Software Development :: Libraries :: Python Modules',
+    ]
 )
