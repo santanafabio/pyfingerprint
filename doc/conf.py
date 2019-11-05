@@ -8,7 +8,7 @@ sys.path.insert(0, '../src/files/')
 import pyfingerprint
 
 project = u'PyFingerprint'
-master_doc = 'PyFingerprint'
+master_doc = 'index'
 author = 'Bastian Raschke <bastian.raschke@posteo.de>'
 copyright = '2014-{}, {}'.format(datetime.date.today().year, author)
 version = pyfingerprint.__version__
