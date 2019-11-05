@@ -23,3 +23,4 @@ extensions = [
     'sphinx.ext.autodoc',
 ]
 autoclass_content = "both"
+html_theme = "sphinx_rtd_theme"
