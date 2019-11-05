@@ -1106,9 +1106,14 @@ class PyFingerprint(object):
         else:
             raise Exception('Unknown error '+ hex(receivedPacketPayload[0]))
 
-    def searchTemplate(self):
+    def searchTemplate(self, charBufferNumber = FINGERPRINT_CHARBUFFER1, positionStart = 0, count = -1):
         """
         Searches inside the database for the characteristics in charbuffer.
+
+        Arguments:
+            charBufferNumber (int): The Charbuffer. Use FINGERPRINT_CHARBUFFER1 or FINGERPRINT_CHARBUFFER1.
+            positionStart (int): The position to start the search
+            count (int): The number of templates
 
         Returns:
             A tuple that contain the following information:
@@ -1119,12 +1124,10 @@ class PyFingerprint(object):
             Exception: if any error occurs
         """
 
-        ## CharBuffer1 and CharBuffer2 are the same in this case
-        charBufferNumber = FINGERPRINT_CHARBUFFER1
-
-        ## Begin search at index 0
-        positionStart = 0x0000
-        templatesCount = self.getStorageCapacity()
+        if ( count > 0 ):
+            templatesCount = count
+        else:
+            templatesCount = self.getStorageCapacity()
 
         packetPayload = (
             FINGERPRINT_SEARCHTEMPLATE,
