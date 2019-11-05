@@ -1013,6 +1013,9 @@ class PyFingerprint(object):
         @return tuple
         """
 
+        if ( charBufferNumber != FINGERPRINT_CHARBUFFER1 and charBufferNumber != FINGERPRINT_CHARBUFFER2 ):
+            raise ValueError('The given charbuffer number is invalid!')
+
         if ( count > 0 ):
             templatesCount = count
         else:
