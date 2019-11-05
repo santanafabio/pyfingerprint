@@ -3,7 +3,8 @@
 
 import datetime
 import sys
-sys.path.insert(0, '../src/files/')
+import os
+sys.path.append(os.path.join(os.path.dirname(__name__), '../src/files/'))
 
 import pyfingerprint
 
