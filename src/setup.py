@@ -8,8 +8,8 @@ sys.path.insert(0, './files/')
 
 import pyfingerprint
 
-with open('README.md', 'r') as fh:
-    long_description = fh.read()
+with open('README.md', 'r') as readme:
+    long_description = readme.read()
 
 setup(
     name            = 'pyfingerprint',
