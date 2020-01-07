@@ -1,9 +1,6 @@
 # Python library for ZFM fingerprint sensors
 
-The PyFingerprint library allows to use ZhianTec ZFM-20, ZFM-60, ZFM-70 and ZFM-100 fingerprint sensors on the Raspberry Pi or other Linux machines. Some other models like R302, R303, R305, R306, R307, R551 and FPM10A also work.
-
-**Note:** The library is inspired by the C++ library from Adafruit Industries:
-<https://github.com/adafruit/Adafruit-Fingerprint-Sensor-Library>
+The PyFingerprint library allows to use ZhianTec and some other fingerprint sensors in Python projects. For a list of compatible devices and Debian instructions see <https://github.com/bastianraschke/pyfingerprint>.
 
 ## How to use the library
 
@@ -26,9 +23,3 @@ The PyFingerprint library allows to use ZhianTec ZFM-20, ZFM-60, ZFM-70 and ZFM-
 ### Generate a 32-bit random number on the ZFM hardware PRNG
 
     See examples/example_generaterandom.py
-
-## Further information
-
-See my blog post for more information:
-
-<https://sicherheitskritisch.de/2015/03/fingerprint-sensor-fuer-den-raspberry-pi-und-debian-linux-en/>
