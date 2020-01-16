@@ -1039,11 +1039,11 @@ class PyFingerprint(object):
 
     def storeTemplate(self, positionNumber = -1, charBufferNumber = FINGERPRINT_CHARBUFFER1):
         """
-        Stores a template from the specified Char buffer at the given position.
+        Stores a template from the specified char buffer at the given position.
 
         Arguments:
             positionNumber (int): The position
-            charBufferNumber (int): The Char buffer. Use `FINGERPRINT_CHARBUFFER1` or `FINGERPRINT_CHARBUFFER2`.
+            charBufferNumber (int): The char buffer. Use `FINGERPRINT_CHARBUFFER1` or `FINGERPRINT_CHARBUFFER2`.
 
         Returns:
             The position number (int) of the stored template.
