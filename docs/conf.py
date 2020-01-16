@@ -3,12 +3,13 @@
 
 import datetime
 import sys
-sys.path.insert(0, '../src/files/')
+import os
+sys.path.append(os.path.join(os.path.dirname(__name__), '../src/files/'))
 
 import pyfingerprint
 
 project = u'PyFingerprint'
-master_doc = 'PyFingerprint'
+master_doc = 'index'
 author = 'Bastian Raschke <bastian.raschke@posteo.de>'
 copyright = '2014-{}, {}'.format(datetime.date.today().year, author)
 version = pyfingerprint.__version__
@@ -19,6 +20,8 @@ exclude_patterns = [
     '.DS_Store'
 ]
 extensions = [
-    'sphinx.ext.autodoc',
+    'sphinx.ext.napoleon',
 ]
 autoclass_content = "both"
+autodoc_mock_imports = ["serial"]
+html_theme = "sphinx_rtd_theme"

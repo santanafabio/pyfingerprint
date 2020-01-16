@@ -117,20 +117,19 @@ FINGERPRINT_ERROR_BADPACKET = 0xFE
 ##
 
 FINGERPRINT_CHARBUFFER1 = 0x01
+"""
+Char buffer 1
+"""
+
 FINGERPRINT_CHARBUFFER2 = 0x02
+"""
+Char buffer 2
+"""
 
 class PyFingerprint(object):
     """
-    A python written library for the ZhianTec ZFM-20 fingerprint sensor.
+    Manages ZhianTec fingerprint sensors.
 
-    @attribute integer(4 bytes) __address
-    Address to connect to sensor.
-
-    @attribute integer(4 bytes) __password
-    Password to connect to sensor.
-
-    @attribute Serial __serial
-    UART serial connection via PySerial.
     """
     __address = None
     __password = None
@@ -140,14 +139,18 @@ class PyFingerprint(object):
         """
         Constructor
 
-        @param string port
-        @param integer baudRate
-        @param integer(4 bytes) address
-        @param integer(4 bytes) password
+        Arguments:
+            port (str): The port to use
+            baudRate (int): The baud rate to use. Must be a multiple of 9600!
+            address (int): The sensor address
+            password (int): The sensor password
+
+        Raises:
+            ValueError: if baud rate, address or password are invalid
         """
 
         if ( baudRate < 9600 or baudRate > 115200 or baudRate % 9600 != 0 ):
-            raise ValueError('The given baudrate is invalid!')
+            raise ValueError('The given baud rate is invalid!')
 
         if ( address < 0x00000000 or address > 0xFFFFFFFF ):
             raise ValueError('The given address is invalid!')
@@ -178,33 +181,42 @@ class PyFingerprint(object):
 
     def __rightShift(self, n, x):
         """
-        Shift a byte.
+        Performs a right-shift.
 
-        @param integer n
-        @param integer x
-        @return integer
+        Arguments:
+            n (int): The number
+            x (int): The amount of bits to shift
+
+        Returns:
+            The shifted number (int)
         """
 
         return (n >> x & 0xFF)
 
     def __leftShift(self, n, x):
         """
-        Shift a byte.
+        Performs a left-shift.
 
-        @param integer n
-        @param integer x
-        @return integer
+        Arguments:
+            n (int): The number
+            x (int): The amount of bits to shift
+
+        Returns:
+            The shifted number (int)
         """
 
         return (n << x)
 
     def __bitAtPosition(self, n, p):
         """
-        Get the bit of n at position p.
+        Gets the bit at the specified position.
 
-        @param integer n
-        @param integer p
-        @return integer
+        Arguments:
+            n (int): The number
+            x (int): The position
+
+        Returns:
+            The bit number (int)
         """
 
         ## A bitshift 2 ^ p
@@ -219,8 +231,11 @@ class PyFingerprint(object):
         """
         Converts a byte to string.
 
-        @param byte byte
-        @return string
+        Arguments:
+            byte (int): The byte
+
+        Returns:
+            The string (str)
         """
 
         return struct.pack('@B', byte)
@@ -229,20 +244,22 @@ class PyFingerprint(object):
         """
         Convert one "string" byte (like '0xFF') to real integer byte (0xFF).
 
-        @param string string
-        @return byte
+        Arguments:
+            string (str): The string
+
+        Returns:
+            The byte (int)
         """
 
         return struct.unpack('@B', string)[0]
 
     def __writePacket(self, packetType, packetPayload):
         """
-        Send a packet to fingerprint sensor.
+        Sends a packet to the sensor.
 
-        @param integer(1 byte) packetType
-        @param tuple packetPayload
-
-        @return void
+        Arguments:
+            packetType (int): The packet type (either `FINGERPRINT_COMMANDPACKET`, `FINGERPRINT_DATAPACKET` or `FINGERPRINT_ENDDATAPACKET`)
+            packetPayload (tuple): The payload
         """
 
         ## Write header (one byte at once)
@@ -276,13 +293,15 @@ class PyFingerprint(object):
 
     def __readPacket(self):
         """
-        Receive a packet from fingerprint sensor.
+        Receives a packet from the sensor.
 
-        Return a tuple that contain the following information:
-        0: integer(1 byte) The packet type.
-        1: integer(n bytes) The packet payload.
+        Returns:
+            A tuple that contain the following information:
+            0: integer(1 byte) The packet type.
+            1: integer(n bytes) The packet payload.
 
-        @return tuple
+        Raises:
+            Exception: if checksum is wrong
         """
 
         receivedPacketData = []
@@ -343,9 +362,13 @@ class PyFingerprint(object):
 
     def verifyPassword(self):
         """
-        Verify password of the fingerprint sensor.
+        Verifies password of the sensor.
 
-        @return boolean
+        Returns:
+            True if password is correct or False otherwise.
+
+        Raises:
+            Exception: if an error occured
         """
 
         packetPayload = (
@@ -384,10 +407,16 @@ class PyFingerprint(object):
 
     def setPassword(self, newPassword):
         """
-        Set the password of the sensor.
+        Sets the password of the sensor.
 
-        @param integer(4 bytes) newPassword
-        @return boolean
+        Arguments:
+            newPassword (int): The new password to use.
+
+        Returns:
+            True if password was set correctly or False otherwise.
+
+        Raises:
+            Exception: if an error occured
         """
 
         ## Validate the password (maximum 4 bytes)
@@ -424,10 +453,16 @@ class PyFingerprint(object):
 
     def setAddress(self, newAddress):
         """
-        Set the module address of the sensor.
+        Sets the sensor address.
 
-        @param integer(4 bytes) newAddress
-        @return boolean
+        Arguments:
+            newAddress (int): The new address to use.
+
+        Returns:
+            True if address was set correctly or False otherwise.
+
+        Raises:
+            Exception: if any error occurs
         """
 
         ## Validate the address (maximum 4 bytes)
@@ -466,16 +501,23 @@ class PyFingerprint(object):
         """
         Set a system parameter of the sensor.
 
-        @param integer(1 byte) parameterNumber
-        @param integer(1 byte) parameterValue
-        @return boolean
+        Arguments:
+            parameterNumber (int): The parameter number. Use one of `FINGERPRINT_SETSYSTEMPARAMETER_*` constants.
+            parameterValue (int): The value
+
+        Returns:
+            True if successful or False otherwise.
+
+        Raises:
+            ValueError: if any passed parameter is invalid
+            Exception: if any error occurs
         """
 
-        ## Validate the baudrate parameter
+        ## Validate the baud rate parameter
         if ( parameterNumber == FINGERPRINT_SETSYSTEMPARAMETER_BAUDRATE ):
 
             if ( parameterValue < 1 or parameterValue > 12 ):
-                raise ValueError('The given baudrate parameter is invalid!')
+                raise ValueError('The given baud rate parameter is invalid!')
 
         ## Validate the security level parameter
         elif ( parameterNumber == FINGERPRINT_SETSYSTEMPARAMETER_SECURITY_LEVEL ):
@@ -523,13 +565,18 @@ class PyFingerprint(object):
 
     def setBaudRate(self, baudRate):
         """
-        Sets the baudrate.
+        Sets the baud rate.
 
-        baudRate (int): The baudrate
+        Arguments:
+            baudRate (int): The baud rate
+
+        Raises:
+            ValueError: if passed baud rate is no multiple of 9600
+            Exception: if any error occurs
         """
 
         if (baudRate % 9600 != 0):
-            raise ValueError("Invalid baudrate")
+            raise ValueError("Invalid baud rate")
 
         self.setSystemParameter(FINGERPRINT_SETSYSTEMPARAMETER_BAUDRATE, baudRate // 9600)
 
@@ -537,7 +584,11 @@ class PyFingerprint(object):
         """
         Sets the security level of the sensor.
 
-        securityLevel (int): Value between 1 and 5 where 1 is lowest and 5 highest.
+        Arguments:
+            securityLevel (int): Value between 1 and 5 where 1 is lowest and 5 highest.
+
+        Raises:
+            Exception: if any error occurs
         """
 
         self.setSystemParameter(FINGERPRINT_SETSYSTEMPARAMETER_SECURITY_LEVEL, securityLevel)
@@ -546,7 +597,12 @@ class PyFingerprint(object):
         """
         Sets the maximum packet size of sensor.
 
-        packetSize (int): 32, 64, 128 and 256 are supported.
+        Arguments:
+            packetSize (int): 32, 64, 128 and 256 are supported.
+
+        Raises:
+            ValueError: if passed packet size is invalid
+            Exception: if any error occurs
         """
 
         try:
@@ -560,18 +616,20 @@ class PyFingerprint(object):
 
     def getSystemParameters(self):
         """
-        Get all available system information of the sensor.
+        Gets all available system information of the sensor.
 
-        Return a tuple that contain the following information:
-        0: integer(2 bytes) The status register.
-        1: integer(2 bytes) The system id.
-        2: integer(2 bytes) The storage capacity.
-        3: integer(2 bytes) The security level.
-        4: integer(4 bytes) The sensor address.
-        5: integer(2 bytes) The packet length.
-        6: integer(2 bytes) The baudrate.
+        Returns:
+            A tuple that contains the following information:
+            0: integer(2 bytes) The status register.
+            1: integer(2 bytes) The system id.
+            2: integer(2 bytes) The storage capacity.
+            3: integer(2 bytes) The security level.
+            4: integer(4 bytes) The sensor address.
+            5: integer(2 bytes) The packet length.
+            6: integer(2 bytes) The baud rate.
 
-        @return tuple
+        Raises:
+            Exception: if any error occurs
         """
 
         packetPayload = (
@@ -608,10 +666,13 @@ class PyFingerprint(object):
 
     def getStorageCapacity(self):
         """
-        Get the sensor storage capacity.
+        Gets the sensor storage capacity.
 
-        @return int
-        The storage capacity.
+        Returns:
+            The storage capacity (int).
+
+        Raises:
+            Exception: if any error occurs
         """
 
         return self.getSystemParameters()[2]
@@ -620,18 +681,25 @@ class PyFingerprint(object):
         """
         Gets the security level of the sensor.
 
-        @return int
-        The security level
+        Returns:
+            The security level (int).
+
+        Raises:
+            Exception: if any error occurs
         """
 
         return self.getSystemParameters()[3]
 
     def getMaxPacketSize(self):
         """
-        Get the maximum allowed size of packet by sensor.
+        Gets the maximum allowed size of a single packet.
 
-        @return int
-        Return the max size.
+        Returns:
+            Return the max size (int).
+
+        Raises:
+            ValueError: if packet size is invalid
+            Exception: if any error occurs
         """
 
         packetMaxSizeType = self.getSystemParameters()[5]
@@ -647,20 +715,30 @@ class PyFingerprint(object):
 
     def getBaudRate(self):
         """
-        Gets the baudrate.
+        Gets the baud rate.
 
-        @return int
-        The baudrate
+        Returns:
+            The baud rate (int).
+
+        Raises:
+            Exception: if any error occurs
         """
 
         return self.getSystemParameters()[6] * 9600
 
     def getTemplateIndex(self, page):
         """
-        Get a list of the template positions with usage indicator.
+        Gets a list of the template positions with usage indicator.
 
-        @param integer(1 byte) page
-        @return list
+        Arguments:
+            page (int): The page (value between 0 and 3).
+
+        Returns:
+            The list.
+
+        Raises:
+            ValueError: if passed page is invalid
+            Exception: if any error occurs
         """
 
         if ( page < 0 or page > 3 ):
@@ -704,9 +782,13 @@ class PyFingerprint(object):
 
     def getTemplateCount(self):
         """
-        Get the number of stored templates.
+        Gets the number of stored templates.
 
-        @return integer(2 bytes)
+        Returns:
+            The template count (int).
+
+        Raises:
+            Exception: if any error occurs
         """
 
         packetPayload = (
@@ -736,9 +818,13 @@ class PyFingerprint(object):
 
     def readImage(self):
         """
-        Read the image of a finger and stores it in ImageBuffer.
+        Reads the image of a finger and stores it in image buffer.
 
-        @return boolean
+        Returns:
+            True if image was read successfully or False otherwise.
+
+        Raises:
+            Exception: if any error occurs
         """
 
         packetPayload = (
@@ -776,10 +862,14 @@ class PyFingerprint(object):
 
     def downloadImage(self, imageDestination):
         """
-        Download the image of a finger to host computer.
+        Downloads the image from image buffer.
 
-        @param string imageDestination
-        @return void
+        Arguments:
+            imageDestination (str): Path to image
+
+        Raises:
+            ValueError: if directory is not writable
+            Exception: if any error occurs
         """
 
         destinationDirectory = os.path.dirname(imageDestination)
@@ -859,14 +949,21 @@ class PyFingerprint(object):
 
     def convertImage(self, charBufferNumber = FINGERPRINT_CHARBUFFER1):
         """
-        Convert the image in ImageBuffer to finger characteristics and store in CharBuffer1 or CharBuffer2.
+        Converts the image in image buffer to characteristics and stores it in specified char buffer.
 
-        @param integer(1 byte) charBufferNumber
-        @return boolean
+        Arguments:
+            charBufferNumber (int): The char buffer. Use `FINGERPRINT_CHARBUFFER1` or `FINGERPRINT_CHARBUFFER2`.
+
+        Returns:
+            True if successful or False otherwise.
+
+        Raises:
+            ValueError: if passed char buffer is invalid
+            Exception: if any error occurs
         """
 
         if ( charBufferNumber != FINGERPRINT_CHARBUFFER1 and charBufferNumber != FINGERPRINT_CHARBUFFER2 ):
-            raise ValueError('The given charbuffer number is invalid!')
+            raise ValueError('The given char buffer number is invalid!')
 
         packetPayload = (
             FINGERPRINT_CONVERTIMAGE,
@@ -903,10 +1000,14 @@ class PyFingerprint(object):
 
     def createTemplate(self):
         """
-        Combine the characteristics which are stored in CharBuffer1 and CharBuffer2 to a template.
-        The created template will be stored again in CharBuffer1 and CharBuffer2 as the same.
+        Combines the characteristics which are stored in char buffer 1 and char buffer 2 into one template.
+        The created template will be stored again in char buffer 1 and char buffer 2 as the same.
 
-        @return boolean
+        Returns:
+            True if successful or False otherwise.
+
+        Raises:
+            Exception: if any error occurs
         """
 
         packetPayload = (
@@ -938,11 +1039,18 @@ class PyFingerprint(object):
 
     def storeTemplate(self, positionNumber = -1, charBufferNumber = FINGERPRINT_CHARBUFFER1):
         """
-        Save a template from the specified CharBuffer to the given position number.
+        Stores a template from the specified char buffer at the given position.
 
-        @param integer(2 bytes) positionNumber
-        @param integer(1 byte) charBufferNumber
-        @return integer
+        Arguments:
+            positionNumber (int): The position
+            charBufferNumber (int): The char buffer. Use `FINGERPRINT_CHARBUFFER1` or `FINGERPRINT_CHARBUFFER2`.
+
+        Returns:
+            The position number (int) of the stored template.
+
+        Raises:
+            ValueError: if passed position or char buffer is invalid
+            Exception: if any error occurs
         """
 
         ## Find a free index
@@ -964,7 +1072,7 @@ class PyFingerprint(object):
             raise ValueError('The given position number is invalid!')
 
         if ( charBufferNumber != FINGERPRINT_CHARBUFFER1 and charBufferNumber != FINGERPRINT_CHARBUFFER2 ):
-            raise ValueError('The given charbuffer number is invalid!')
+            raise ValueError('The given char buffer number is invalid!')
 
         packetPayload = (
             FINGERPRINT_STORETEMPLATE,
@@ -1000,17 +1108,20 @@ class PyFingerprint(object):
 
     def searchTemplate(self, charBufferNumber = FINGERPRINT_CHARBUFFER1, positionStart = 0, count = -1):
         """
-        Search the finger characteristics in CharBuffer in database.
+        Searches inside the database for the characteristics in char buffer.
 
-        @param integer(1 byte) charBufferNumber
-        @param integer(2 byte) positionStart
-        @param integer(2 byte) count
+        Arguments:
+            charBufferNumber (int): The char buffer. Use `FINGERPRINT_CHARBUFFER1` or `FINGERPRINT_CHARBUFFER2`.
+            positionStart (int): The position to start the search
+            count (int): The number of templates
 
-        Return a tuple that contain the following information:
-        0: integer(2 bytes) The position number of found template.
-        1: integer(2 bytes) The accuracy score of found template.
+        Returns:
+            A tuple that contain the following information:
+            0: integer(2 bytes) The position number of found template.
+            1: integer(2 bytes) The accuracy score of found template.
 
-        @return tuple
+        Raises:
+            Exception: if any error occurs
         """
 
         if ( charBufferNumber != FINGERPRINT_CHARBUFFER1 and charBufferNumber != FINGERPRINT_CHARBUFFER2 ):
@@ -1062,18 +1173,25 @@ class PyFingerprint(object):
 
     def loadTemplate(self, positionNumber, charBufferNumber = FINGERPRINT_CHARBUFFER1):
         """
-        Load an existing template specified by position number to specified CharBuffer.
+        Loads an existing template specified by position number to specified char buffer.
 
-        @param integer(2 bytes) positionNumber
-        @param integer(1 byte) charBufferNumber
-        @return boolean
+        Arguments:
+            positionNumber (int): The position
+            charBufferNumber (int): The char buffer. Use `FINGERPRINT_CHARBUFFER1` or `FINGERPRINT_CHARBUFFER2`.
+
+        Returns:
+            True if successful or False otherwise.
+
+        Raises:
+            ValueError: if passed position or char buffer is invalid
+            Exception: if any error occurs
         """
 
         if ( positionNumber < 0x0000 or positionNumber >= self.getStorageCapacity() ):
             raise ValueError('The given position number is invalid!')
 
         if ( charBufferNumber != FINGERPRINT_CHARBUFFER1 and charBufferNumber != FINGERPRINT_CHARBUFFER2 ):
-            raise ValueError('The given charbuffer number is invalid!')
+            raise ValueError('The given char buffer number is invalid!')
 
         packetPayload = (
             FINGERPRINT_LOADTEMPLATE,
@@ -1109,11 +1227,18 @@ class PyFingerprint(object):
 
     def deleteTemplate(self, positionNumber, count = 1):
         """
-        Delete templates from fingerprint database. Per default one.
+        Deletes templates from fingerprint database. Per default one.
 
-        @param integer(2 bytes) positionNumber
-        @param integer(2 bytes) count
-        @return boolean
+        Arguments:
+            positionNumber (int): The position
+            count (int): The number of templates to be deleted.
+
+        Returns:
+            True if successful or False otherwise.
+
+        Raises:
+            ValueError: if passed position or count is invalid
+            Exception: if any error occurs
         """
 
         capacity = self.getStorageCapacity()
@@ -1160,9 +1285,13 @@ class PyFingerprint(object):
 
     def clearDatabase(self):
         """
-        Clear the complete template database.
+        Deletes all templates from the fingeprint database.
 
-        @return boolean
+        Returns:
+            True if successful or False otherwise.
+
+        Raises:
+            Exception: if any error occurs
         """
 
         packetPayload = (
@@ -1194,9 +1323,13 @@ class PyFingerprint(object):
 
     def compareCharacteristics(self):
         """
-        Compare the finger characteristics of CharBuffer1 with CharBuffer2 and return the accuracy score.
+        Compare the finger characteristics of char buffer 1 with char buffer 2 and returns the accuracy score.
 
-        @return integer(2 bytes)
+        Returns:
+            The accuracy score (int). 0 means fingers are not the same.
+
+        Raises:
+            Exception: if any error occurs
         """
 
         packetPayload = (
@@ -1230,19 +1363,25 @@ class PyFingerprint(object):
 
     def uploadCharacteristics(self, charBufferNumber = FINGERPRINT_CHARBUFFER1, characteristicsData = [0]):
         """
-        Upload finger characteristics to CharBuffer1 or CharBuffer2.
+        Uploads finger characteristics to specified char buffer.
 
-        @author: David Gilson <davgilson@live.fr>
+        Author:
+            David Gilson <davgilson@live.fr>
 
-        @param integer(1 byte) charBufferNumber
-        @param integer(list) characteristicsData
+        Arguments:
+            charBufferNumber (int): The char buffer. Use `FINGERPRINT_CHARBUFFER1` or `FINGERPRINT_CHARBUFFER2`.
+            characteristicsData (list): The characteristics
 
-        @return boolean
-        Return true if everything is right.
+        Returns:
+            True if everything is right.
+
+        Raises:
+            ValueError: if passed char buffer or characteristics are invalid
+            Exception: if any error occurs
         """
 
         if ( charBufferNumber != FINGERPRINT_CHARBUFFER1 and charBufferNumber != FINGERPRINT_CHARBUFFER2 ):
-            raise ValueError('The given charbuffer number is invalid!')
+            raise ValueError('The given char buffer number is invalid!')
 
         if ( characteristicsData == [0] ):
             raise ValueError('The characteristics data is required!')
@@ -1303,12 +1442,16 @@ class PyFingerprint(object):
 
     def generateRandomNumber(self):
         """
-        Generate a random 32-bit decimal number.
+        Generates a random 32-bit decimal number.
 
-        @author: Philipp Meisberger <team@pm-codeworks.de>
+        Author:
+            Philipp Meisberger <team@pm-codeworks.de>
 
-        @return int
-        The generated random number
+        Returns:
+            The generated random number (int).
+
+        Raises:
+            Exception: if any error occurs
         """
         packetPayload = (
             FINGERPRINT_GENERATERANDOMNUMBER,
@@ -1341,16 +1484,22 @@ class PyFingerprint(object):
 
     def downloadCharacteristics(self, charBufferNumber = FINGERPRINT_CHARBUFFER1):
         """
-        Download the finger characteristics of CharBuffer1 or CharBuffer2.
+        Downloads the finger characteristics from the specified char buffer.
 
-        @param integer(1 byte) charBufferNumber
+        Arguments:
+            charBufferNumber (int): The char buffer. Use `FINGERPRINT_CHARBUFFER1` or `FINGERPRINT_CHARBUFFER2`.
+            characteristicsData (list): The characteristics
 
-        @return list
-        Return a list that contains 512 integer(1 byte) elements of the characteristic.
+        Returns:
+            The characteristics (list).
+
+        Raises:
+            ValueError: if passed char buffer is invalid
+            Exception: if any error occurs
         """
 
         if ( charBufferNumber != FINGERPRINT_CHARBUFFER1 and charBufferNumber != FINGERPRINT_CHARBUFFER2 ):
-            raise ValueError('The given charbuffer number is invalid!')
+            raise ValueError('The given char buffer number is invalid!')
 
         packetPayload = (
             FINGERPRINT_DOWNLOADCHARACTERISTICS,
