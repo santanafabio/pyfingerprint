@@ -315,6 +315,8 @@ class PyFingerprint(object):
             if ( len(receivedFragment) != 0 ):
                 receivedFragment = self.__stringToByte(receivedFragment)
                 ## print 'Received packet fragment = ' + hex(receivedFragment)
+            else:
+                continue
 
             ## Insert byte if packet seems valid
             receivedPacketData.insert(i, receivedFragment)
