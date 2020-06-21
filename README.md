@@ -28,9 +28,9 @@ Add PM Code Works signing key
     ~# wget -qO - http://apt.pm-codeworks.de/pm-codeworks.de.gpg | apt-key add -
     ~# apt-get update
 
-Install the packages
+Install the package
 
-    ~# apt-get install python-fingerprint libpam-fingerprint
+    ~# apt-get install python3-fingerprint
 
 ### Installation of the latest version
 
