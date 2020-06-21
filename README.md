@@ -64,6 +64,8 @@ Install missing dependencies:
 
     ~$ sudo apt-get -f install
 
+## Setup
+
 Allow non-root user "pi" (replace it correctly) to use the serial port devices:
 
     ~$ sudo usermod -a -G dialout pi
