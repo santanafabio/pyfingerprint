@@ -7,23 +7,48 @@ The PyFingerprint library allows to use ZhianTec ZFM-20, ZFM-60, ZFM-70 and ZFM-
 **Note:** The library is inspired by the C++ library from Adafruit Industries:
 <https://github.com/adafruit/Adafruit-Fingerprint-Sensor-Library>
 
-## Package building on Debian
+## Installation
 
-Install the packages for building:
+There are two ways of installing PyFingerprint: Installation of the stable or latest version. The stable version is distributed through the PM Code Works APT repository and is fully tested but does not contain the latest changes.
+
+### Installation of the stable version
+
+Add PM Code Works repository
+
+* Debian 9:
+
+    `~# echo "deb http://apt.pm-codeworks.de stretch main" | tee /etc/apt/sources.list.d/pm-codeworks.list`
+
+* Debian 10:
+
+    `~# echo "deb http://apt.pm-codeworks.de buster main" | tee /etc/apt/sources.list.d/pm-codeworks.list`
+
+Add PM Code Works signing key
+
+    ~# wget -qO - http://apt.pm-codeworks.de/pm-codeworks.de.gpg | apt-key add -
+    ~# apt-get update
+
+Install the packages
+
+    ~# apt-get install python-fingerprint libpam-fingerprint
+
+### Installation of the latest version
+
+The latest version contains the latest changes that may not have been fully tested and should therefore not be used in production. It is recommended to install the stable version.
+
+Install required packages for building
 
     ~$ sudo apt-get install git devscripts equivs
 
-Clone this repository:
+Clone this repository
 
     ~$ git clone https://github.com/bastianraschke/pyfingerprint.git
 
-Build the package:
+Build the package
 
     ~$ cd ./pyfingerprint/src/
     ~$ sudo mk-build-deps -i debian/control
     ~$ dpkg-buildpackage -uc -us
-
-## Installation
 
 The library supports Python 2 and Python 3. There are one Debian package for each. It's up to you which version you install.
 
