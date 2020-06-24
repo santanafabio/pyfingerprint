@@ -26,11 +26,11 @@ Add PM Code Works repository
 Add PM Code Works signing key
 
     ~# wget -qO - http://apt.pm-codeworks.de/pm-codeworks.de.gpg | apt-key add -
-    ~# apt-get update
+    ~# apt update
 
 Install the package
 
-    ~# apt-get install python3-fingerprint
+    ~# apt install python3-fingerprint
 
 ### Installation of the latest version
 
@@ -38,7 +38,7 @@ The latest version contains the latest changes that may not have been fully test
 
 Install required packages for building
 
-    ~$ sudo apt-get install git devscripts equivs
+    ~$ sudo apt install git devscripts equivs
 
 Clone this repository
 
@@ -62,7 +62,7 @@ For Python 2 use:
 
 Install missing dependencies:
 
-    ~$ sudo apt-get -f install
+    ~$ sudo apt -f install
 
 ## Setup
 
