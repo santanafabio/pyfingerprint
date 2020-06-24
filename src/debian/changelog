@@ -1,3 +1,18 @@
+python-fingerprint (1.6) UNRELEASED; urgency=medium
+
+  * Fixed "port could not be found" on Windows
+  * Fixed image issues with downloadImage()
+  * Introduced methods for getting and setting the baudrate, security level and
+    max packet size
+  * Added optional arguments charBufferNumber, positionStart and count to
+    searchTemplate()
+  * Introduced constants FINGERPRINT_CHARBUFFER1 and FINGERPRINT_CHARBUFFER2
+    (use them instead of 0x01 and 0x02)
+  * Improved API documentation
+  * Hosting online API documentation
+
+ -- Philipp Meisberger <team@pm-codeworks.de>  Wed, 24 Jun 2020 22:52:59 +0200
+
 python-fingerprint (1.5) stable; urgency=medium
 
   * Added support for Python 3 (still compatible with Python 2)
