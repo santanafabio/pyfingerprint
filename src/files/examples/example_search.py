@@ -10,6 +10,7 @@ All rights reserved.
 
 import hashlib
 from pyfingerprint.pyfingerprint import PyFingerprint
+from pyfingerprint.pyfingerprint import FINGERPRINT_CHARBUFFER1
 
 
 ## Search for a finger
@@ -39,7 +40,7 @@ try:
         pass
 
     ## Converts read image to characteristics and stores it in charbuffer 1
-    f.convertImage(0x01)
+    f.convertImage(FINGERPRINT_CHARBUFFER1)
 
     ## Searchs template
     result = f.searchTemplate()
@@ -58,10 +59,10 @@ try:
     ##
 
     ## Loads the found template to charbuffer 1
-    f.loadTemplate(positionNumber, 0x01)
+    f.loadTemplate(positionNumber, FINGERPRINT_CHARBUFFER1)
 
     ## Downloads the characteristics of template loaded in charbuffer 1
-    characterics = str(f.downloadCharacteristics(0x01)).encode('utf-8')
+    characterics = str(f.downloadCharacteristics(FINGERPRINT_CHARBUFFER1)).encode('utf-8')
 
     ## Hashes characteristics of template
     print('SHA-2 hash of template: ' + hashlib.sha256(characterics).hexdigest())
