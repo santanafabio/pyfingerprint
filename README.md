@@ -15,11 +15,11 @@ There are two ways of installing PyFingerprint: Installation of the stable or la
 
 Add PM Code Works repository
 
-* Debian 9:
+* Debian 9/Ubuntu 16 & 17:
 
     `~# echo "deb http://apt.pm-codeworks.de stretch main" | tee /etc/apt/sources.list.d/pm-codeworks.list`
 
-* Debian 10:
+* Debian 10/Ubuntu 18 & 19:
 
     `~# echo "deb http://apt.pm-codeworks.de buster main" | tee /etc/apt/sources.list.d/pm-codeworks.list`
 
