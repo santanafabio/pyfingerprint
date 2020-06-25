@@ -64,6 +64,14 @@ Install missing dependencies:
 
     sudo apt -f install
 
+### Alternative installation using PIP
+
+If you do not have a Debian based OS or something does not work you can also install the Python package via PIP:
+
+    pip install pyfingerprint
+
+**NOTE**: It is important to not use the Debian package and PIP package at the same time!
+
 ## Setup
 
 Allow non-root user "pi" (replace it correctly) to use the serial port devices:
