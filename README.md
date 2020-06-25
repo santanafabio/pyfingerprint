@@ -17,20 +17,20 @@ Add PM Code Works repository:
 
 * Debian 9/Ubuntu 16 & 17:
 
-    `~# echo "deb http://apt.pm-codeworks.de stretch main" | tee /etc/apt/sources.list.d/pm-codeworks.list`
+    `echo "deb http://apt.pm-codeworks.de stretch main" | sudo tee /etc/apt/sources.list.d/pm-codeworks.list`
 
 * Debian 10/Ubuntu 18 & 19:
 
-    `~# echo "deb http://apt.pm-codeworks.de buster main" | tee /etc/apt/sources.list.d/pm-codeworks.list`
+    `echo "deb http://apt.pm-codeworks.de buster main" | sudo tee /etc/apt/sources.list.d/pm-codeworks.list`
 
 Add PM Code Works signing key:
 
-    ~# wget -qO - http://apt.pm-codeworks.de/pm-codeworks.de.gpg | apt-key add -
-    ~# apt update
+    wget -qO - http://apt.pm-codeworks.de/pm-codeworks.de.gpg | sudo apt-key add -
+    sudo apt update
 
 Install the package:
 
-    ~# apt install python3-fingerprint
+    sudo apt install python3-fingerprint
 
 ### Installation of the development version
 
@@ -38,60 +38,60 @@ The development version contains the latest changes that may not have been fully
 
 Install required packages for building:
 
-    ~$ sudo apt install git devscripts equivs
+    sudo apt install git devscripts equivs
 
 Clone this repository:
 
-    ~$ git clone https://github.com/bastianraschke/pyfingerprint.git
+    git clone https://github.com/bastianraschke/pyfingerprint.git
 
 Build the package:
 
-    ~$ cd ./pyfingerprint/src/
-    ~$ sudo mk-build-deps -i debian/control
-    ~$ dpkg-buildpackage -uc -us
+    cd ./pyfingerprint/src/
+    sudo mk-build-deps -i debian/control
+    dpkg-buildpackage -uc -us
 
 The library supports Python 2 and Python 3. There are one Debian package for each. It's up to you which version you install.
 
 For Python 3 use:
 
-    ~$ sudo dpkg -i ../python3-fingerprint*.deb
+    sudo dpkg -i ../python3-fingerprint*.deb
 
 For Python 2 use:
 
-    ~$ sudo dpkg -i ../python-fingerprint*.deb
+    sudo dpkg -i ../python-fingerprint*.deb
 
 Install missing dependencies:
 
-    ~$ sudo apt -f install
+    sudo apt -f install
 
 ## Setup
 
 Allow non-root user "pi" (replace it correctly) to use the serial port devices:
 
-    ~$ sudo usermod -a -G dialout pi
-    ~$ sudo reboot
+    sudo usermod -a -G dialout pi
+    sudo reboot
 
 ## How to use the library
 
 ### Enroll a new finger
 
-    ~$ python /usr/share/doc/python-fingerprint/examples/example_enroll.py
+    python /usr/share/doc/python-fingerprint/examples/example_enroll.py
 
 ### Search an enrolled finger
 
-    ~$ python /usr/share/doc/python-fingerprint/examples/example_search.py
+    python /usr/share/doc/python-fingerprint/examples/example_search.py
 
 ### Delete an enrolled finger
 
-    ~$ python /usr/share/doc/python-fingerprint/examples/example_delete.py
+    python /usr/share/doc/python-fingerprint/examples/example_delete.py
 
 ### Download image of a scanned finger
 
-    ~$ python /usr/share/doc/python-fingerprint/examples/example_downloadimage.py
+    python /usr/share/doc/python-fingerprint/examples/example_downloadimage.py
 
 ### Generate a 32-bit random number on the ZFM hardware PRNG
 
-    ~$ python /usr/share/doc/python-fingerprint/examples/example_generaterandom.py
+    python /usr/share/doc/python-fingerprint/examples/example_generaterandom.py
 
 ## Further information
 
