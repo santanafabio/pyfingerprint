@@ -66,7 +66,7 @@ Install missing dependencies:
 
 ### Alternative installation using PIP
 
-If you do not have a Debian based OS or something does not work you can also install the Python package via PIP:
+If you do not have a Debian based OS or something does not work you can also install the Python package via [PIP](https://pypi.org/project/pyfingerprint):
 
     pip install pyfingerprint
 
