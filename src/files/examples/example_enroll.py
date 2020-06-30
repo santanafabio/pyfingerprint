@@ -10,6 +10,8 @@ All rights reserved.
 
 import time
 from pyfingerprint.pyfingerprint import PyFingerprint
+from pyfingerprint.pyfingerprint import FINGERPRINT_CHARBUFFER1
+from pyfingerprint.pyfingerprint import FINGERPRINT_CHARBUFFER2
 
 
 ## Enrolls new finger
@@ -39,7 +41,7 @@ try:
         pass
 
     ## Converts read image to characteristics and stores it in charbuffer 1
-    f.convertImage(0x01)
+    f.convertImage(FINGERPRINT_CHARBUFFER1)
 
     ## Checks if finger is already enrolled
     result = f.searchTemplate()
@@ -59,7 +61,7 @@ try:
         pass
 
     ## Converts read image to characteristics and stores it in charbuffer 2
-    f.convertImage(0x02)
+    f.convertImage(FINGERPRINT_CHARBUFFER2)
 
     ## Compares the charbuffers
     if ( f.compareCharacteristics() == 0 ):
