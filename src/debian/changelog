@@ -3,6 +3,7 @@ python-fingerprint (1.6) UNRELEASED; urgency=medium
   * Fixed "The received packet do not begin with a valid header" error
   * Fixed "port could not be found" on Windows
   * Fixed image issues with downloadImage()
+  * Fixed writing data packets whose length is not multiple of 32
   * Introduced methods for getting and setting the baudrate, security level and
     max packet size
   * Added optional arguments charBufferNumber, positionStart and count to

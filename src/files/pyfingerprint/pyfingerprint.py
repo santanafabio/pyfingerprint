@@ -1422,20 +1422,20 @@ class PyFingerprint(object):
             raise Exception('Unknown error '+ hex(receivedPacketPayload[0]))
 
         ## Upload data packets
-        packetNbr = len(characteristicsData) / maxPacketSize
+        packetNumber = int(len(characteristicsData) / maxPacketSize)
 
-        if ( packetNbr <= 1 ):
+        if ( packetNumber <= 1 ):
             self.__writePacket(FINGERPRINT_ENDDATAPACKET, characteristicsData)
         else:
             i = 1
-            while ( i < packetNbr ):
+            while ( i < packetNumber ):
                 lfrom = (i-1) * maxPacketSize
                 lto = lfrom + maxPacketSize
                 self.__writePacket(FINGERPRINT_DATAPACKET, characteristicsData[lfrom:lto])
                 i += 1
 
             lfrom = (i-1) * maxPacketSize
-            lto = lfrom + maxPacketSize
+            lto = len(characteristicsData)
             self.__writePacket(FINGERPRINT_ENDDATAPACKET, characteristicsData[lfrom:lto])
 
         ## Verify uploaded characteristics
