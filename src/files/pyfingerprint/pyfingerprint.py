@@ -39,6 +39,8 @@ FINGERPRINT_TEMPLATECOUNT = 0x1D
 
 FINGERPRINT_READIMAGE = 0x01
 
+FINGERPRINT_SETAURA = 0x35
+
 ## Note: The documentation mean upload to host computer.
 FINGERPRINT_DOWNLOADIMAGE = 0x0A
 
@@ -66,6 +68,20 @@ FINGERPRINT_DOWNLOADCHARACTERISTICS = 0x08
 FINGERPRINT_SETSYSTEMPARAMETER_BAUDRATE = 4
 FINGERPRINT_SETSYSTEMPARAMETER_SECURITY_LEVEL = 5
 FINGERPRINT_SETSYSTEMPARAMETER_PACKAGE_SIZE = 6
+
+## Parameters of setAuraStatus()
+##
+
+FINGERPRINT_AURA_BREATHING_LIGHT = 0x01
+FINGERPRINT_AURA_FLASHING_LIGHT = 0x02
+FINGERPRINT_AURA_LIGHT_ALWAYS_ON = 0x03
+FINGERPRINT_AURA_LIGHT_ALWAYS_OFF = 0x04
+FINGERPRINT_AURA_GRADUALLY_ALWAYS_ON = 0x05
+FINGERPRINT_AURA_GRADUALLY_ALWAYS_OFF = 0x06
+
+FINGERPRINT_AURA_COLOR_RED = 0x01
+FINGERPRINT_AURA_COLOR_BLUE = 0x02
+FINGERPRINT_AURA_COLOR_PURPLE = 0x03
 
 ## Packet reply confirmations
 ##
@@ -1547,5 +1563,22 @@ class PyFingerprint(object):
 
             for i in range(0, len(receivedPacketPayload)):
                 completePayload.append(receivedPacketPayload[i])
-
+        
         return completePayload
+
+    def setAuraStatus(self, controlCode, ledColor)
+        
+        speedCycle = 0xff 
+        numberOfCycles = 0x00
+        
+        packetPayload = (
+            FINGERPRINT_SETAURA,
+            controlCode,
+            speedCycle,
+            colorIndex,
+            numberOfCycles            
+        )
+
+        self.__writePacket(FINGERPRINT_COMMANDPACKET, packetPayload)
+        receivedPacket = self.__readPacket()
+
